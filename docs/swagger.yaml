@@ -1,0 +1,474 @@
+definitions:
+  auth.authorizationInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  auth.getUserInfoResponse:
+    properties:
+      email:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
+  auth.registerNewUserInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
+  dish.Dish:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      is_available:
+        type: boolean
+      name:
+        type: string
+      price:
+        type: number
+      quantity:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  order_processing.addDishInput:
+    properties:
+      description:
+        type: string
+      is_available:
+        type: boolean
+      name:
+        type: string
+      price:
+        type: number
+      quantity:
+        type: integer
+      user_token:
+        type: string
+    type: object
+  order_processing.createOrderInput:
+    properties:
+      amount_of_dishes:
+        type: integer
+      dishes:
+        items:
+          $ref: '#/definitions/dish.Dish'
+        type: array
+      special_requests:
+        type: string
+      status:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  order_processing.deleteDishInput:
+    properties:
+      dish_id:
+        type: integer
+      token:
+        type: string
+    type: object
+  order_processing.getDishInput:
+    properties:
+      dish_id:
+        type: integer
+      token:
+        type: string
+    type: object
+  order_processing.getOrderInput:
+    properties:
+      order_id:
+        type: integer
+    type: object
+  order_processing.updateDishInput:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      is_available:
+        type: boolean
+      name:
+        type: string
+      price:
+        type: number
+      quantity:
+        type: integer
+      user_token:
+        type: string
+    type: object
+  order_processing.updateOrderInput:
+    properties:
+      order_id:
+        type: integer
+      status:
+        type: string
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: UI for microservers.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger API
+  version: "1.0"
+paths:
+  /auth/authorization:
+    post:
+      consumes:
+      - application/json
+      description: Provides authorization
+      parameters:
+      - description: User's email and password
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/auth.authorizationInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Authorization
+      tags:
+      - auth
+  /auth/get-user-info:
+    post:
+      consumes:
+      - application/json
+      description: Getting user information
+      parameters:
+      - description: User's username, email and role
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/auth.getUserInfoResponse'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: GetUserInfo
+      tags:
+      - auth
+  /auth/register-new-user:
+    post:
+      consumes:
+      - application/json
+      description: Doing new user registration
+      parameters:
+      - description: New User
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/auth.registerNewUserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: RegisterNewUser
+      tags:
+      - auth
+  /order-processing/add-dish:
+    post:
+      consumes:
+      - application/json
+      description: Adding dish
+      parameters:
+      - description: Name, description, price, quantity, isAvailable and userToken
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/order_processing.addDishInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "423":
+          description: Locked
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: AddDish
+      tags:
+      - order-processing
+  /order-processing/create-order:
+    post:
+      consumes:
+      - application/json
+      description: Creating order
+      parameters:
+      - description: UserID, amountOfDishes, dishes array, specialRequests and status
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/order_processing.createOrderInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: CreateOrder
+      tags:
+      - order-processing
+  /order-processing/delete-dish:
+    post:
+      consumes:
+      - application/json
+      description: Deleting dish
+      parameters:
+      - description: dishID and userToken
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/order_processing.deleteDishInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "423":
+          description: Locked
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: DeleteDish
+      tags:
+      - order-processing
+  /order-processing/get-dish:
+    post:
+      consumes:
+      - application/json
+      description: Getting dish
+      parameters:
+      - description: DishID and user token
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/order_processing.getDishInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "423":
+          description: Locked
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: GetDish
+      tags:
+      - order-processing
+  /order-processing/get-menu:
+    get:
+      description: Getting menu
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: GetMenu
+      tags:
+      - order-processing
+  /order-processing/get-order:
+    post:
+      consumes:
+      - application/json
+      description: Getting order
+      parameters:
+      - description: OrderID to get
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/order_processing.getOrderInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: GetOrder
+      tags:
+      - order-processing
+  /order-processing/update-dish:
+    put:
+      consumes:
+      - application/json
+      description: Updating dish
+      parameters:
+      - description: id, name, description, price, quantity, isAvailable and userToken
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/order_processing.updateDishInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "423":
+          description: Locked
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: UpdateDish
+      tags:
+      - order-processing
+  /order-processing/update-order:
+    put:
+      consumes:
+      - application/json
+      description: Updating order
+      parameters:
+      - description: OrderID and new order status
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/order_processing.updateOrderInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: UpdateOrder
+      tags:
+      - order-processing
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"
