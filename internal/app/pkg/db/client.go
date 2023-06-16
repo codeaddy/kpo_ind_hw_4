@@ -8,7 +8,8 @@ import (
 )
 
 func NewDB(ctx context.Context) (*Database, error) {
-	dsn := generateDsn()
+	//dsn := generateDsn()
+	dsn := "postgresql://test:test@postgres/postgres?sslmode=disable"
 	pool, err := pgxpool.Connect(ctx, dsn)
 	if err != nil {
 		return nil, err
